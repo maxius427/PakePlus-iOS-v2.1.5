@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>购物车 - 鑫福利</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E60012;
+            --secondary: #1E88E5;
+            --text-dark: #333333;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --bg-light: #F5F5F5;
+            --bg-card: #FFFFFF;
+            --border: #E0E0E0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 145px;
+            padding-top: 55px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Header */
+        .page-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-back {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+        }
+
+        /* Cart Items */
+        .cart-section {
+            padding: 15px;
+        }
+
+        .shop-section {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .shop-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+
+        .shop-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .shop-checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .shop-checkbox.checked::after {
+            content: '✓';
+            color: #fff;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .shop-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .item-checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .item-checkbox.checked::after {
+            content: '✓';
+            color: #fff;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .item-image {
+            width: 90px;
+            height: 90px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            flex-shrink: 0;
+        }
+
+        .item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-size: 14px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .item-spec {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .item-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-price {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .item-price span {
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            background: #fff;
+            border: none;
+            color: var(--text-medium);
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .quantity-value {
+            width: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .delete-btn {
+            padding: 5px 10px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #fff;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 998;
+        }
+
+        .select-all {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .select-all-text {
+            font-size: 14px;
+        }
+
+        .total-section {
+            flex: 1;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .total-label {
+            font-size: 14px;
+        }
+
+        .total-price {
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .total-price span {
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .checkout-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Empty Cart */
+        .empty-cart {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-cart-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart-text {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .empty-cart-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #fff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+        }
+
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-medium);
+            font-size: 11px;
+            padding: 8px 0;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-item.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 0 0 3px 3px;
+        }
+
+        .mobile-nav-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+
+        .mobile-nav-badge {
+            position: absolute;
+            top: 5px;
+            right: 25%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="page-header">
+        <button class="header-back">←</button>
+        <h1 class="header-title">购物车</h1>
+        <div style="width: 36px;"></div>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="cart-section">
+        <div class="shop-section">
+            <div class="shop-header">
+                <div class="shop-checkbox checked" onclick="this.classList.toggle('checked')"></div>
+                <span class="shop-name">京东自营</span>
+            </div>
+
+            <div class="cart-item">
+                <div class="item-checkbox checked"></div>
+                <div class="item-image">🎫</div>
+                <div class="item-info">
+                    <div>
+                        <div class="item-name">京东E卡 100元面值 全场通用</div>
+                        <div class="item-spec">面值：100元</div>
+                    </div>
+                    <div class="item-bottom">
+                        <div class="item-price">980<span>积分</span></div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn">-</button>
+                            <div class="quantity-value">1</div>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-item">
+                <div class="item-checkbox checked"></div>
+                <div class="item-image">⛽</div>
+                <div class="item-info">
+                    <div>
+                        <div class="item-name">中石化加油卡 200元面值</div>
+                        <div class="item-spec">面值：200元</div>
+                    </div>
+                    <div class="item-bottom">
+                        <div class="item-price">1960<span>积分</span></div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn">-</button>
+                            <div class="quantity-value">2</div>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="shop-section">
+            <div class="shop-header">
+                <div class="shop-checkbox" onclick="this.classList.toggle('checked')"></div>
+                <span class="shop-name">星巴克官方旗舰店</span>
+            </div>
+
+            <div class="cart-item">
+                <div class="item-checkbox"></div>
+                <div class="item-image">☕</div>
+                <div class="item-info">
+                    <div>
+                        <div class="item-name">星巴克中杯饮品券</div>
+                        <div class="item-spec">规格：中杯</div>
+                    </div>
+                    <div class="item-bottom">
+                        <div class="item-price">280<span>积分</span></div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn">-</button>
+                            <div class="quantity-value">1</div>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+        <div class="select-all">
+            <div class="shop-checkbox checked" onclick="this.classList.toggle('checked')"></div>
+            <span class="select-all-text">全选</span>
+        </div>
+        <div class="total-section">
+            <span class="total-label">合计:</span>
+            <span class="total-price">4900<span>积分</span></span>
+            <button class="checkout-btn">结算(3)</button>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🏠</span>
+            <span>首页</span>
+        </a>
+        <a href="category.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🎁</span>
+            <span>分类</span>
+        </a>
+        <a href="seckill.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">⚡</span>
+            <span>秒杀</span>
+        </a>
+        <a href="cart.html" class="mobile-nav-item active">
+            <span class="mobile-nav-icon">🛒</span>
+            <span class="mobile-nav-badge">3</span>
+            <span>购物车</span>
+        </a>
+        <a href="profile.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">👤</span>
+            <span>我的</span>
+        </a>
+    </nav>
+
+    <script>
+        // Checkbox functionality
+        document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', () => {
+                checkbox.classList.toggle('checked');
+            });
+        });
+
+        // Quantity controls
+        document.querySelectorAll('.quantity-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const control = e.target.parentElement;
+                const valueEl = control.querySelector('.quantity-value');
+                let value = parseInt(valueEl.textContent);
+
+                if (e.target.textContent === '+' && value < 99) {
+                    value++;
+                } else if (e.target.textContent === '-' && value > 1) {
+                    value--;
+                }
+
+                valueEl.textContent = value;
+            });
+        });
+    </script>
+</body>
+</html>
