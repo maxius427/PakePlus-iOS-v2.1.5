@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>商品分类 - 鑫福利</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E60012;
+            --secondary: #1E88E5;
+            --text-dark: #333333;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --bg-light: #F5F5F5;
+            --bg-card: #FFFFFF;
+            --border: #E0E0E0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.15);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 65px;
+            padding-top: 55px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Mobile Header Search */
+        .mobile-header-search {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-menu-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 18px;
+        }
+
+        .mobile-search-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 8px 15px;
+        }
+
+        .mobile-search-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Category Layout */
+        .category-container {
+            display: flex;
+            height: calc(100vh - 115px);
+            overflow: hidden;
+        }
+
+        .category-sidebar {
+            width: 85px;
+            background: #fff;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        .category-sidebar-item {
+            padding: 18px 10px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-medium);
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .category-sidebar-item.active {
+            color: var(--primary);
+            background: #fff;
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .category-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .category-banner {
+            background: linear-gradient(135deg, #E60012 0%, #B5000E 100%);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .category-banner h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .category-banner p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .subcategory-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subcategory-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .subcategory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .subcategory-item {
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .subcategory-icon {
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 8px;
+            background: #fff;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .subcategory-item:active .subcategory-icon {
+            transform: scale(0.95);
+        }
+
+        .subcategory-name {
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #fff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+        }
+
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-medium);
+            font-size: 11px;
+            padding: 8px 0;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-item.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 0 0 3px 3px;
+        }
+
+        .mobile-nav-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+
+        .mobile-nav-badge {
+            position: absolute;
+            top: 5px;
+            right: 25%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header Search -->
+    <div class="mobile-header-search">
+        <button class="mobile-menu-btn">☰</button>
+        <div class="mobile-search-box">
+            <input type="text" placeholder="搜索商品、品牌、分类...">
+            <span style="color: var(--text-light);">🔍</span>
+        </div>
+    </div>
+
+    <!-- Category Container -->
+    <div class="category-container">
+        <!-- Sidebar -->
+        <div class="category-sidebar">
+            <div class="category-sidebar-item active" data-tab="holiday">🎁<br>节日福利</div>
+            <div class="category-sidebar-item" data-tab="card">💳<br>电子卡券</div>
+            <div class="category-sidebar-item" data-tab="food">🍎<br>生鲜水果</div>
+            <div class="category-sidebar-item" data-tab="home">🏠<br>居家生活</div>
+            <div class="category-sidebar-item" data-tab="digital">📱<br>数码电器</div>
+            <div class="category-sidebar-item" data-tab="fashion">👔<br>服饰箱包</div>
+            <div class="category-sidebar-item" data-tab="sports">🏃<br>运动户外</div>
+            <div class="category-sidebar-item" data-tab="beauty">💄<br>美妆个护</div>
+            <div class="category-sidebar-item" data-tab="book">📚<br>图书文具</div>
+            <div class="category-sidebar-item" data-tab="baby">👶<br>母婴用品</div>
+        </div>
+
+        <!-- Content -->
+        <div class="category-content">
+            <div class="category-banner">
+                <h2>🎁 节日福利专区</h2>
+                <p>精选节日好礼，传递温暖心意</p>
+            </div>
+
+            <div class="subcategory-title">春节礼品</div>
+            <div class="subcategory-grid">
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🧧</div>
+                    <div class="subcategory-name">红包套装</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🍬</div>
+                    <div class="subcategory-name">年货糖果</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🍊</div>
+                    <div class="subcategory-name">春节礼盒</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🎊</div>
+                    <div class="subcategory-name">装饰用品</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🍜</div>
+                    <div class="subcategory-name">年货礼盒</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🎐</div>
+                    <div class="subcategory-name">传统礼品</div>
+                </a>
+            </div>
+
+            <div class="subcategory-title">中秋礼品</div>
+            <div class="subcategory-grid">
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🥮</div>
+                    <div class="subcategory-name">月饼礼盒</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🍵</div>
+                    <div class="subcategory-name">茶礼盒</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🍇</div>
+                    <div class="subcategory-name">水果礼盒</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🥜</div>
+                    <div class="subcategory-name">坚果礼盒</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🍪</div>
+                    <div class="subcategory-name">糕点礼盒</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🎑</div>
+                    <div class="subcategory-name">创意礼品</div>
+                </a>
+            </div>
+
+            <div class="subcategory-title">节日特惠</div>
+            <div class="subcategory-grid">
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🎄</div>
+                    <div class="subcategory-name">圣诞专区</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">💝</div>
+                    <div class="subcategory-name">情人节</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">👩‍👧‍👦</div>
+                    <div class="subcategory-name">母亲节</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">👨‍👧‍👦</div>
+                    <div class="subcategory-name">父亲节</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🎂</div>
+                    <div class="subcategory-name">生日礼品</div>
+                </a>
+                <a href="#" class="subcategory-item">
+                    <div class="subcategory-icon">🎁</div>
+                    <div class="subcategory-name">商务礼品</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🏠</span>
+            <span>首页</span>
+        </a>
+        <a href="category.html" class="mobile-nav-item active">
+            <span class="mobile-nav-icon">🎁</span>
+            <span>分类</span>
+        </a>
+        <a href="seckill.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">⚡</span>
+            <span>秒杀</span>
+        </a>
+        <a href="cart.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🛒</span>
+            <span class="mobile-nav-badge">3</span>
+            <span>购物车</span>
+        </a>
+        <a href="profile.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">👤</span>
+            <span>我的</span>
+        </a>
+    </nav>
+
+    <script>
+        // Sidebar tab switching
+        const sidebarItems = document.querySelectorAll('.category-sidebar-item');
+        const categoryContent = document.querySelector('.category-content');
+        const categoryBanner = document.querySelector('.category-banner');
+
+        const categoryData = {
+            holiday: {
+                title: '🎁 节日福利专区',
+                desc: '精选节日好礼，传递温暖心意'
+            },
+            card: {
+                title: '💳 电子卡券专区',
+                desc: '即买即用，方便快捷'
+            },
+            food: {
+                title: '🍎 生鲜水果专区',
+                desc: '新鲜直达，健康生活'
+            },
+            home: {
+                title: '🏠 居家生活专区',
+                desc: '品质生活，从家开始'
+            },
+            digital: {
+                title: '📱 数码电器专区',
+                desc: '科技生活，智能体验'
+            },
+            fashion: {
+                title: '👔 服饰箱包专区',
+                desc: '时尚潮流，彰显品味'
+            },
+            sports: {
+                title: '🏃 运动户外专区',
+                desc: '活力生活，健康运动'
+            },
+            beauty: {
+                title: '💄 美妆个护专区',
+                desc: '美丽自信，从细节开始'
+            },
+            book: {
+                title: '📚 图书文具专区',
+                desc: '知识海洋，学习成长'
+            },
+            baby: {
+                title: '👶 母婴用品专区',
+                desc: '关爱宝贝，健康成长'
+            }
+        };
+
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', () => {
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                const tab = item.dataset.tab;
+                const data = categoryData[tab];
+                categoryBanner.querySelector('h2').textContent = data.title;
+                categoryBanner.querySelector('p').textContent = data.desc;
+            });
+        });
+    </script>
+</body>
+</html>
