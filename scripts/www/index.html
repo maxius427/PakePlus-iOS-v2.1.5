@@ -1,88 +1,2577 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="./static/css/styles.css" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src * 'unsafe-inline' 'unsafe-eval'"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Tauri App</title>
-        <script src="./static/js/main.js"></script>
-    </head>
-    <body>
-        <main class="container">
-            <h1>Welcome to TauriMan</h1>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>鑫福利 - 企业员工福利商城平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E60012;
+            --primary-dark: #B5000E;
+            --primary-hover: #C20010;
+            --secondary: #1E88E5;
+            --secondary-dark: #1565C0;
+            --secondary-hover: #1976D2;
+            --accent: #f39c12;
+            --text-dark: #333333;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --bg-light: #F5F5F5;
+            --bg-card: #FFFFFF;
+            --border: #E0E0E0;
+            --gradient-primary: linear-gradient(135deg, #E60012 0%, #B5000E 100%);
+            --gradient-secondary: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+            --gradient-accent: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 16px rgba(0,0,0,0.2);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 16px;
+        }
 
-            <div class="row">
-                <a
-                    href="https://tauri.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <img
-                        src="./assets/tauri.svg"
-                        class="logo tauri"
-                        alt="Tauri logo"
-                    />
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Enable text selection for specific elements */
+        input, textarea {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        /* Touch feedback for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .product-card:active,
+            .category-card:active,
+            .quick-action:active,
+            .mobile-nav-item:active {
+                transform: scale(0.97);
+                opacity: 0.8;
+            }
+
+            .banner-btn:active {
+                transform: scale(0.95);
+            }
+
+            .product-action:active {
+                background: var(--primary);
+                color: #fff;
+            }
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background: var(--bg-light);
+            color: var(--text-medium);
+            font-size: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-top a {
+            color: var(--text-medium);
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.2s;
+        }
+
+        .header-top a:hover {
+            color: var(--primary);
+        }
+
+        .header-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            position: relative;
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 20px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .desktop-search {
+            display: block;
+        }
+
+        .desktop-only {
+            display: flex;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            background: none;
+            -webkit-text-fill-color: var(--primary);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 480px;
+            margin: 0 40px;
+            display: flex;
+            position: relative;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-right: none;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: var(--bg-light);
+        }
+
+        .search-box input:focus {
+            border-color: var(--secondary);
+            background: #fff;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background: var(--secondary);
+            border: none;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .search-box button:hover {
+            background: var(--secondary-hover);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .header-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: var(--text-medium);
+            font-size: 14px;
+            transition: color 0.2s;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .header-action:hover {
+            color: var(--primary);
+            background: var(--bg-light);
+        }
+
+        .header-action-icon {
+            font-size: 20px;
+        }
+
+        .cart-badge {
+            position: relative;
+        }
+
+        .cart-badge::after {
+            content: '3';
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 11px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--secondary);
+            border-bottom: 2px solid var(--secondary-dark);
+        }
+
+        /* Mobile categories scroll */
+        @media (max-width: 768px) {
+            .nav {
+                position: sticky;
+                top: 0;
+                z-index: 998;
+            }
+
+            .nav-inner {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .nav-inner::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-category {
+                flex-shrink: 0;
+                margin-right: 10px;
+            }
+
+            .nav-category-dropdown {
+                display: none;
+            }
+
+            .nav-links {
+                margin-left: 0;
+            }
+
+            .nav-link {
+                flex-shrink: 0;
+                padding: 0 12px;
+            }
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            height: 50px;
+        }
+
+        .nav-category {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 0 20px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            position: relative;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .nav-category:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .nav-category-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 240px;
+            background: var(--bg-card);
+            box-shadow: var(--shadow-md);
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-5px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .nav-category:hover .nav-category-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-category-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .nav-category-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-category-item:hover {
+            background: var(--bg-light);
+            color: var(--primary);
+            padding-left: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 5px;
+            margin-left: 20px;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            padding: 0 16px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            position: relative;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-link.hot::after {
+            content: 'HOT';
+            position: absolute;
+            top: 8px;
+            right: 6px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 9px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        /* Banner */
+        .banner {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .banner-slider {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .banner-slide {
+            background: var(--primary);
+            padding: 50px 80px;
+            color: #fff;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 200%;
+            background: rgba(255,255,255,0.08);
+            transform: rotate(15deg);
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+        }
+
+        .banner-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+        }
+
+        .banner-title {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .banner-desc {
+            font-size: 18px;
+            opacity: 0.95;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
+
+        .banner-btn {
+            display: inline-block;
+            background: #fff;
+            color: var(--primary);
+            padding: 14px 40px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .banner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        .banner-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .banner-dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .banner-dot.active {
+            background: #fff;
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .banner-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+
+        .banner-arrow:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .banner-arrow.prev {
+            left: 20px;
+        }
+
+        .banner-arrow.next {
+            right: 20px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .quick-action {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 25px 15px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .quick-action:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--secondary);
+        }
+
+        .quick-action-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 12px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: transform 0.3s;
+        }
+
+        .quick-action:hover .quick-action-icon {
+            transform: scale(1.1);
+        }
+
+        .quick-action-icon.red { background: rgba(230, 0, 18, 0.1); color: var(--primary); }
+        .quick-action-icon.blue { background: rgba(30, 136, 229, 0.1); color: var(--secondary); }
+        .quick-action-icon.orange { background: rgba(243, 156, 18, 0.1); color: var(--accent); }
+        .quick-action-icon.green { background: rgba(39, 174, 96, 0.1); color: #27ae60; }
+        .quick-action-icon.purple { background: rgba(142, 68, 173, 0.1); color: #8e44ad; }
+
+        .quick-action-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .quick-action-desc {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Points Card */
+        .points-section {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .points-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: var(--radius-lg);
+            padding: 30px 40px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .points-card::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(231, 76, 60, 0.2);
+            border-radius: 50%;
+        }
+
+        .points-info h3 {
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .points-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .points-value span {
+            font-size: 16px;
+            margin-left: 5px;
+        }
+
+        .points-actions {
+            display: flex;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .points-btn {
+            padding: 10px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .points-btn.primary {
+            background: var(--gradient-accent);
+            color: #fff;
+        }
+
+        .points-btn.secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .points-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title-icon {
+            width: 6px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+        }
+
+        .section-more {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .section-more:hover {
+            color: var(--primary);
+        }
+
+        /* Categories Section */
+        .categories-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--secondary);
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover .category-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .category-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Products Section */
+        .products-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .products-tabs {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .products-tab {
+            padding: 10px 0;
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-light);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .products-tab:hover,
+        .products-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-md);
+            border-color: var(--secondary);
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--primary);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+            z-index: 1;
+        }
+
+        .product-tag.new {
+            background: var(--secondary);
+        }
+
+        .product-tag.hot {
+            background: var(--accent);
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-name {
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+            color: var(--text-dark);
+            height: 42px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .product-points {
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .product-points span {
+            font-size: 13px;
+            font-weight: 400;
+            margin-left: 2px;
+        }
+
+        .product-original {
+            color: var(--text-light);
+            font-size: 13px;
+            text-decoration: line-through;
+        }
+
+        .product-action {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            background: var(--bg-light);
+            color: var(--text-medium);
+            text-align: center;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .product-card:hover .product-action {
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        /* Special Offers */
+        .offers-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .offer-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .offer-header {
+            padding: 20px;
+            color: #fff;
+        }
+
+        .offer-header.red { background: var(--gradient-primary); }
+        .offer-header.blue { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+        .offer-header.orange { background: var(--gradient-accent); }
+
+        .offer-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .offer-desc {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .offer-products {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .offer-product {
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .offer-product-img {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 5px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-light);
+        }
+
+        .offer-product-price {
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: #fff;
+            margin-top: 60px;
+        }
+
+        .footer-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 20px;
+        }
+
+        .footer-brand .logo-icon {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .footer-brand .logo-text {
+            color: #fff;
+            background: none;
+            -webkit-text-fill-color: #fff;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+        }
+
+        .footer-col h4 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #fff;
+        }
+
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-bottom-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .quick-actions-grid {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-main {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .search-box {
+                order: 3;
+                margin: 10px 0 0;
+                max-width: none;
+                width: 100%;
+            }
+
+            .header-actions {
+                gap: 15px;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 0 12px;
+            }
+
+            .product-card {
+                border-radius: var(--radius-sm);
+            }
+
+            .product-info {
+                padding: 12px;
+            }
+
+            .product-name {
+                font-size: 13px;
+                height: 38px;
+                margin-bottom: 8px;
+            }
+
+            .product-points {
+                font-size: 18px;
+            }
+
+            .product-original {
+                font-size: 12px;
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                padding: 0 12px;
+            }
+
+            .category-card {
+                padding: 15px 10px;
+            }
+
+            .category-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+            }
+
+            .category-name {
+                font-size: 13px;
+            }
+
+            .quick-actions {
+                padding: 0 12px;
+            }
+
+            .quick-actions-grid {
+                gap: 12px;
+            }
+
+            .quick-action {
+                padding: 20px 10px;
+            }
+
+            .quick-action-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            .quick-action-title {
+                font-size: 14px;
+            }
+
+            .quick-action-desc {
+                font-size: 11px;
+            }
+
+            .offers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+
+            .banner-title {
+                font-size: 32px;
+            }
+
+            .banner-desc {
+                font-size: 15px;
+            }
+
+            .points-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .points-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .points-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Hide desktop elements */
+            .nav-links {
+                display: none;
+            }
+
+            .desktop-search {
+                display: none;
+            }
+
+            .header-top {
+                display: none;
+            }
+
+            .header-actions {
+                display: none;
+            }
+
+            /* Show mobile elements */
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+
+            .mobile-header-search {
+                display: flex !important;
+            }
+
+            .footer {
+                display: none;
+            }
+
+            body {
+                padding-bottom: 65px;
+                padding-top: 55px;
+            }
+
+            /* Mobile banner full width */
+            .banner {
+                margin: 0;
+                padding: 0;
+            }
+
+            .banner-slider {
+                border-radius: 0;
+            }
+
+            .banner-slide {
+                padding: 40px 20px;
+                min-height: 200px;
+            }
+
+            .banner-title {
+                font-size: 28px;
+            }
+
+            .banner-desc {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .banner-btn {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+
+            .banner-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            /* Mobile spacing */
+            .quick-actions {
+                margin: 15px auto;
+                padding: 0 12px;
+            }
+
+            .points-section {
+                margin: 15px auto;
+                padding: 0 12px;
+            }
+
+            .categories-section {
+                margin: 15px auto;
+                padding: 0 12px;
+            }
+
+            .products-section {
+                margin: 15px auto;
+                padding: 0 12px;
+            }
+
+            .offers-section {
+                margin: 15px auto;
+                padding: 0 12px;
+            }
+
+            /* Show back to top */
+            .back-to-top {
+                display: flex;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .banner-title {
+                font-size: 24px;
+            }
+
+            .banner-content {
+                padding: 0 15px;
+            }
+        }
+
+        /* Mobile menu button */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .header-main {
+                padding: 15px;
+            }
+
+            .logo {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #fff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 9999;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-medium);
+            font-size: 11px;
+            padding: 8px 0;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-item.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 0 0 3px 3px;
+        }
+
+        .mobile-nav-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+
+        .mobile-nav-badge {
+            position: absolute;
+            top: 5px;
+            right: 25%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Mobile Header Search */
+        .mobile-header-search {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 8px 12px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-search-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 8px 15px;
+        }
+
+        .mobile-search-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .mobile-search-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--secondary);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Pull to refresh & Load more indicators */
+        .pull-refresh {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 14px;
+            background: var(--bg-card);
+        }
+
+        .load-more {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 14px;
+            background: var(--bg-card);
+        }
+
+        .load-more.show {
+            display: block;
+        }
+
+        .load-more-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(230, 0, 18, 0.4);
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 998;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .back-to-top:active {
+            transform: scale(0.95);
+        }
+
+        /* Side Menu */
+        .side-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .side-menu-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .side-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: #fff;
+            z-index: 2001;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .side-menu.show {
+            display: block;
+            left: 0;
+        }
+
+        .side-menu-header {
+            background: var(--primary);
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .side-menu-header .logo-icon {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .side-menu-header .logo-text {
+            color: #fff;
+            -webkit-text-fill-color: #fff;
+        }
+
+        .side-menu-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .side-menu-section {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .side-menu-title {
+            padding: 0 20px;
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .side-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .side-menu-item:active {
+            background: var(--bg-light);
+        }
+
+        .side-menu-item-icon {
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .pull-refresh {
+                display: block;
+            }
+
+            .back-to-top {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-refresh">
+        <span>↓ 下拉刷新</span>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="header-top-inner">
+                <span>欢迎来到鑫福利企业员工福利商城！</span>
+                <div>
+                    <a href="#">帮助中心</a>
+                    <a href="#">客服热线: 400-888-8888</a>
+                    <a href="#">手机APP</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-main">
+            <button class="mobile-menu-btn" id="sideMenuToggle2">☰</button>
+            <a href="#" class="logo">
+                <div class="logo-icon">鑫</div>
+                <span class="logo-text">鑫福利</span>
+            </a>
+            <div class="search-box">
+                <input type="text" placeholder="搜索商品、品牌、分类...">
+                <button>🔍</button>
+            </div>
+            <div class="header-actions">
+                <a href="#" class="header-action">
+                    <span class="header-action-icon">👤</span>
+                    <span>我的</span>
                 </a>
-                <a
-                    href="https://pakeplus.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <img
-                        src="https://hk.gh-proxy.org/https://github.com/Sjj1024/PakePlus/blob/main/app-icon.png"
-                        class="logo vanilla"
-                        alt="JavaScript logo"
-                    />
+                <a href="#" class="header-action">
+                    <span class="header-action-icon">❤️</span>
+                    <span>收藏</span>
+                </a>
+                <a href="#" class="header-action">
+                    <span class="header-action-icon cart-badge">🛒</span>
+                    <span>购物车</span>
                 </a>
             </div>
-            <p>Click to get data</p>
-            <form class="row" id="greet-form">
-                <input id="greet-input" placeholder="Enter a name..." />
-                <button type="submit" id="getdata">GET DATA</button>
-            </form>
-            <div class="functions">
-                <a href="./book.html" target="_self">跳转到book.html</a>
-                <a
-                    href="https://www.baidu.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >跳到百度blank
-                </a>
-                <a
-                    href="https://www.baidu.com"
-                    target="_self"
-                    rel="noopener noreferrer"
-                >
-                    跳到百度self
-                </a>
-                <button onclick="sayHello()">点击我</button>
-                <button onclick="sayHello()">下载文件</button>
-                <button onclick="sayHello()">上传文件</button>
-                <button onclick="sayHello()">访问相机</button>
-                <button onclick="sayHello()">访问麦克风</button>
-                <button onclick="sayHello()">访问相册</button>
-                <button class="btn" onclick="openWechat()">打开微信</button>
-                <button class="btn" onclick="openWechatScan()">
-                    打开扫一扫
-                </button>
-                <button class="btn" onclick="openZhihu()">打开知乎</button>
-                <button onclick="sayHello()">打开抖音</button>
-                <button onclick="sayHello()">用浏览器打开</button>
-                <button>打开知乎</button>
+        </div>
+        <nav class="nav">
+            <div class="nav-inner">
+                <div class="nav-category">
+                    <span>☰</span>
+                    <span>全部商品分类</span>
+                    <div class="nav-category-dropdown">
+                        <a href="#" class="nav-category-item">🎁 节日福利</a>
+                        <a href="#" class="nav-category-item">💳 电子卡券</a>
+                        <a href="#" class="nav-category-item">🍎 生鲜水果</a>
+                        <a href="#" class="nav-category-item">🏠 居家生活</a>
+                        <a href="#" class="nav-category-item">📱 数码电器</a>
+                        <a href="#" class="nav-category-item">👔 服饰箱包</a>
+                        <a href="#" class="nav-category-item">🏃 运动户外</a>
+                        <a href="#" class="nav-category-item">💄 美妆个护</a>
+                    </div>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">首页</a>
+                    <a href="#" class="nav-link hot">限时秒杀</a>
+                    <a href="#" class="nav-link">积分商城</a>
+                    <a href="#" class="nav-link">品牌专区</a>
+                    <a href="#" class="nav-link">新品上市</a>
+                    <a href="#" class="nav-link">企业专享</a>
+                </div>
             </div>
-            <p id="greet-msg"></p>
-            <img src="./static/image/cursor.jpeg" alt="logo" />
-            <video
-                src="https://hk.gh-proxy.org/https://github.com/Sjj1024/PakePlus/blob/main/docs/static/videos/pakeplus.mp4"
-                autoplay
-                controls
-                style="width: 100%; height: 100%"
-            ></video>
-            <audio src="./static/music/yin.mp3" controls></audio>
-        </main>
-    </body>
+        </nav>
+    </header>
+
+    <!-- Banner -->
+    <section class="banner">
+        <div class="banner-slider">
+            <button class="banner-arrow prev">‹</button>
+            <div class="banner-slide">
+                <div class="banner-content">
+                    <span class="banner-tag">🎉 限时活动</span>
+                    <h1 class="banner-title">新春福利季<br>积分翻倍兑</h1>
+                    <p class="banner-desc">精选好礼，福利加倍！全场商品积分兑换享受双倍优惠，限时3天！</p>
+                    <a href="#" class="banner-btn">立即抢购 →</a>
+                </div>
+            </div>
+            <button class="banner-arrow next">›</button>
+            <div class="banner-dots">
+                <span class="banner-dot active"></span>
+                <span class="banner-dot"></span>
+                <span class="banner-dot"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <div class="quick-actions-grid">
+            <a href="#" class="quick-action animate-in" style="animation-delay: 0.1s">
+                <div class="quick-action-icon red">🎁</div>
+                <div class="quick-action-title">节日福利</div>
+                <div class="quick-action-desc">精选好礼</div>
+            </a>
+            <a href="#" class="quick-action animate-in" style="animation-delay: 0.2s">
+                <div class="quick-action-icon blue">💳</div>
+                <div class="quick-action-title">电子卡券</div>
+                <div class="quick-action-desc">即买即用</div>
+            </a>
+            <a href="#" class="quick-action animate-in" style="animation-delay: 0.3s">
+                <div class="quick-action-icon orange">⚡</div>
+                <div class="quick-action-title">限时秒杀</div>
+                <div class="quick-action-desc">超值特惠</div>
+            </a>
+            <a href="#" class="quick-action animate-in" style="animation-delay: 0.4s">
+                <div class="quick-action-icon green">🏆</div>
+                <div class="quick-action-title">积分兑换</div>
+                <div class="quick-action-desc">积分当钱花</div>
+            </a>
+            <a href="#" class="quick-action animate-in" style="animation-delay: 0.5s">
+                <div class="quick-action-icon purple">🎯</div>
+                <div class="quick-action-title">企业定制</div>
+                <div class="quick-action-desc">专属方案</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Points Card -->
+    <section class="points-section">
+        <div class="points-card">
+            <div class="points-info">
+                <h3>我的福利积分</h3>
+                <div class="points-value">12,580<span>积分</span></div>
+            </div>
+            <div class="points-actions">
+                <a href="#" class="points-btn primary">立即兑换</a>
+                <a href="#" class="points-btn secondary">积分明细</a>
+                <a href="#" class="points-btn secondary">积分规则</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="section-title-icon"></span>
+                热门分类
+            </h2>
+            <a href="#" class="section-more">查看全部 →</a>
+        </div>
+        <div class="categories-grid">
+            <a href="#" class="category-card">
+                <div class="category-icon">🎫</div>
+                <div class="category-name">购物卡券</div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">⛽</div>
+                <div class="category-name">加油充值</div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">📱</div>
+                <div class="category-name">话费流量</div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">🎬</div>
+                <div class="category-name">影音娱乐</div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">🍜</div>
+                <div class="category-name">美食餐饮</div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-icon">✈️</div>
+                <div class="category-name">出行旅游</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="section-title-icon"></span>
+                热销商品
+            </h2>
+            <a href="#" class="section-more">查看更多 →</a>
+        </div>
+        <div class="products-tabs">
+            <div class="products-tab active">全部</div>
+            <div class="products-tab">电子卡券</div>
+            <div class="products-tab">生活服务</div>
+            <div class="products-tab">数码家电</div>
+            <div class="products-tab">食品生鲜</div>
+        </div>
+        <div class="products-grid">
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    🎫
+                    <span class="product-tag hot">热销</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">京东E卡 100元面值 全场通用</div>
+                    <div class="product-price">
+                        <span class="product-points">980<span>积分</span></span>
+                        <span class="product-original">¥100</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    ⛽
+                    <span class="product-tag">特惠</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">中石化加油卡 200元面值</div>
+                    <div class="product-price">
+                        <span class="product-points">1960<span>积分</span></span>
+                        <span class="product-original">¥200</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    📱
+                    <span class="product-tag new">新品</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">全国移动 50元话费充值</div>
+                    <div class="product-price">
+                        <span class="product-points">490<span>积分</span></span>
+                        <span class="product-original">¥50</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    🎬
+                </div>
+                <div class="product-info">
+                    <div class="product-name">爱奇艺VIP会员年卡</div>
+                    <div class="product-price">
+                        <span class="product-points">1580<span>积分</span></span>
+                        <span class="product-original">¥198</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    ☕
+                    <span class="product-tag hot">爆款</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">星巴克中杯饮品券</div>
+                    <div class="product-price">
+                        <span class="product-points">280<span>积分</span></span>
+                        <span class="product-original">¥35</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    🍔
+                </div>
+                <div class="product-info">
+                    <div class="product-name">麦当劳 50元代金券</div>
+                    <div class="product-price">
+                        <span class="product-points">450<span>积分</span></span>
+                        <span class="product-original">¥50</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    🎧
+                    <span class="product-tag new">新品</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">QQ音乐豪华绿钻年卡</div>
+                    <div class="product-price">
+                        <span class="product-points">1280<span>积分</span></span>
+                        <span class="product-original">¥158</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    🏨
+                </div>
+                <div class="product-info">
+                    <div class="product-name">携程旅行 200元酒店券</div>
+                    <div class="product-price">
+                        <span class="product-points">1800<span>积分</span></span>
+                        <span class="product-original">¥200</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    🛒
+                    <span class="product-tag hot">热销</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">天猫超市卡 100元面值</div>
+                    <div class="product-price">
+                        <span class="product-points">980<span>积分</span></span>
+                        <span class="product-original">¥100</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="product-card">
+                <div class="product-image">
+                    🎮
+                </div>
+                <div class="product-info">
+                    <div class="product-name">腾讯视频VIP季卡</div>
+                    <div class="product-price">
+                        <span class="product-points">580<span>积分</span></span>
+                        <span class="product-original">¥68</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Special Offers -->
+    <section class="offers-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="section-title-icon"></span>
+                精选专区
+            </h2>
+        </div>
+        <div class="offers-grid">
+            <div class="offer-card">
+                <div class="offer-header red">
+                    <div class="offer-title">🔥 限时秒杀</div>
+                    <div class="offer-desc">每日10:00/15:00/20:00准时开抢</div>
+                </div>
+                <div class="offer-products">
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">🎫</div>
+                        <div class="offer-product-price">199积分</div>
+                    </a>
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">☕</div>
+                        <div class="offer-product-price">99积分</div>
+                    </a>
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">🍔</div>
+                        <div class="offer-product-price">149积分</div>
+                    </a>
+                </div>
+            </div>
+            <div class="offer-card">
+                <div class="offer-header blue">
+                    <div class="offer-title">💎 会员专享</div>
+                    <div class="offer-desc">尊享会员独家优惠福利</div>
+                </div>
+                <div class="offer-products">
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">🎬</div>
+                        <div class="offer-product-price">880积分</div>
+                    </a>
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">🎧</div>
+                        <div class="offer-product-price">680积分</div>
+                    </a>
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">📺</div>
+                        <div class="offer-product-price">780积分</div>
+                    </a>
+                </div>
+            </div>
+            <div class="offer-card">
+                <div class="offer-header orange">
+                    <div class="offer-title">🎁 新人专区</div>
+                    <div class="offer-desc">新用户首单立减100积分</div>
+                </div>
+                <div class="offer-products">
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">📱</div>
+                        <div class="offer-product-price">390积分</div>
+                    </a>
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">⛽</div>
+                        <div class="offer-product-price">960积分</div>
+                    </a>
+                    <a href="#" class="offer-product">
+                        <div class="offer-product-img">🛒</div>
+                        <div class="offer-product-price">480积分</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <div class="logo-icon">鑫</div>
+                    <span class="logo-text">鑫福利</span>
+                </a>
+                <p>鑫福利是领先的企业员工福利平台，致力于为企业提供一站式数字化福利解决方案，让员工福利更简单、更有价值。</p>
+            </div>
+            <div class="footer-col">
+                <h4>商城服务</h4>
+                <ul>
+                    <li><a href="#">积分商城</a></li>
+                    <li><a href="#">限时秒杀</a></li>
+                    <li><a href="#">品牌专区</a></li>
+                    <li><a href="#">新品上市</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>帮助中心</h4>
+                <ul>
+                    <li><a href="#">常见问题</a></li>
+                    <li><a href="#">订单查询</a></li>
+                    <li><a href="#">退换货政策</a></li>
+                    <li><a href="#">积分规则</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>企业服务</h4>
+                <ul>
+                    <li><a href="#">企业入驻</a></li>
+                    <li><a href="#">定制方案</a></li>
+                    <li><a href="#">API对接</a></li>
+                    <li><a href="#">联系商务</a></li>
+                </ul>
+            </div>
+            <div class="footer-col footer-contact">
+                <h4>联系我们</h4>
+                <p>📞 400-888-8888</p>
+                <p>📧 service@xinfuli.net</p>
+                <p>🕐 周一至周五 9:00-18:00</p>
+                <p>📍 上海市浦东新区XX路XX号</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-inner">
+                <span>© 2024 鑫福利 All Rights Reserved. 沪ICP备XXXXXXXX号</span>
+                <span>
+                    <a href="#" style="color: inherit; text-decoration: none; margin-right: 20px;">隐私政策</a>
+                    <a href="#" style="color: inherit; text-decoration: none;">用户协议</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load More Indicator -->
+    <div class="load-more">
+        <span class="load-more-spinner"></span>
+        <span>加载中...</span>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item active">
+            <span class="mobile-nav-icon">🏠</span>
+            <span>首页</span>
+        </a>
+        <a href="category.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🎁</span>
+            <span>分类</span>
+        </a>
+        <a href="seckill.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">⚡</span>
+            <span>秒杀</span>
+        </a>
+        <a href="cart.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🛒</span>
+            <span class="mobile-nav-badge">3</span>
+            <span>购物车</span>
+        </a>
+        <a href="profile.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">👤</span>
+            <span>我的</span>
+        </a>
+    </nav>
+
+    <!-- Mobile Header Search -->
+    <div class="mobile-header-search">
+        <button class="mobile-menu-btn" id="sideMenuToggle">☰</button>
+        <div class="mobile-search-box">
+            <input type="text" placeholder="搜索商品、品牌、分类...">
+            <span style="color: var(--text-light);">🔍</span>
+        </div>
+        <button class="mobile-search-btn">🔍</button>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">↑</button>
+
+    <!-- Side Menu -->
+    <div class="side-menu-overlay" id="sideMenuOverlay"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <a href="#" class="logo">
+                <div class="logo-icon">鑫</div>
+                <span class="logo-text">鑫福利</span>
+            </a>
+            <button class="side-menu-close" id="sideMenuClose">✕</button>
+        </div>
+        <div class="side-menu-section">
+            <div class="side-menu-title">商城服务</div>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">🏠</span>
+                <span>商城首页</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">⚡</span>
+                <span>限时秒杀</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">🎁</span>
+                <span>积分商城</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">🏷️</span>
+                <span>品牌专区</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">✨</span>
+                <span>新品上市</span>
+            </a>
+        </div>
+        <div class="side-menu-section">
+            <div class="side-menu-title">商品分类</div>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">🎫</span>
+                <span>购物卡券</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">⛽</span>
+                <span>加油充值</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">📱</span>
+                <span>话费流量</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">🎬</span>
+                <span>影音娱乐</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">🍜</span>
+                <span>美食餐饮</span>
+            </a>
+        </div>
+        <div class="side-menu-section">
+            <div class="side-menu-title">个人中心</div>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">👤</span>
+                <span>我的订单</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">❤️</span>
+                <span>我的收藏</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">📍</span>
+                <span>收货地址</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">💬</span>
+                <span>在线客服</span>
+            </a>
+            <a href="#" class="side-menu-item">
+                <span class="side-menu-item-icon">⚙️</span>
+                <span>设置</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Mobile Header Search -->
+    <div class="mobile-header-search">
+        <div class="mobile-search-box">
+            <input type="text" placeholder="搜索商品、品牌、分类...">
+            <span style="color: var(--text-light);">🔍</span>
+        </div>
+        <button class="mobile-search-btn">🔍</button>
+    </div>
+
+    <script>
+        // Banner slider with auto-play
+        const bannerSlider = document.querySelector('.banner-slider');
+        const bannerDots = document.querySelectorAll('.banner-dot');
+        const bannerArrows = document.querySelectorAll('.banner-arrow');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function goToSlide(index) {
+            currentSlide = index;
+            bannerDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % bannerDots.length;
+            goToSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + bannerDots.length) % bannerDots.length;
+            goToSlide(currentSlide);
+        }
+
+        function startSlideShow() {
+            slideInterval = setInterval(nextSlide, 3000);
+        }
+
+        function stopSlideShow() {
+            clearInterval(slideInterval);
+        }
+
+        // Dot click events
+        bannerDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => goToSlide(index));
+        });
+
+        // Arrow click events
+        bannerArrows.forEach(arrow => {
+            arrow.addEventListener('click', () => {
+                if (arrow.classList.contains('prev')) {
+                    prevSlide();
+                } else {
+                    nextSlide();
+                }
+            });
+        });
+
+        // Auto-play with pause on hover
+        bannerSlider.addEventListener('mouseenter', stopSlideShow);
+        bannerSlider.addEventListener('mouseleave', startSlideShow);
+        startSlideShow();
+
+        // Tab switching
+        document.querySelectorAll('.products-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.products-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Animate on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.product-card, .category-card, .offer-card, .quick-action').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.5s ease';
+            observer.observe(el);
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-box input');
+        const searchBtn = document.querySelector('.search-box button');
+
+        searchBtn.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) {
+                alert('搜索: ' + query);
+            }
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+
+        // Mobile bottom nav interaction - Removed to allow normal link navigation
+
+        // Pull to refresh simulation
+        let startY = 0;
+        let pullRefresh = document.querySelector('.pull-refresh');
+        let pullRefreshText = pullRefresh.querySelector('span');
+
+        document.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) {
+                startY = e.touches[0].pageY;
+            }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (window.scrollY === 0 && startY > 0) {
+                const currentY = e.touches[0].pageY;
+                const diff = currentY - startY;
+
+                if (diff > 100) {
+                    pullRefreshText.textContent = '↑ 释放刷新';
+                } else {
+                    pullRefreshText.textContent = '↓ 下拉刷新';
+                }
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (window.scrollY === 0 && startY > 0) {
+                pullRefreshText.textContent = '↓ 下拉刷新';
+                // Simulate refresh
+                setTimeout(() => {
+                    pullRefreshText.textContent = '✓ 刷新成功';
+                    setTimeout(() => {
+                        pullRefreshText.textContent = '↓ 下拉刷新';
+                    }, 1500);
+                }, 500);
+            }
+            startY = 0;
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navCategory = document.querySelector('.nav-category');
+        const navDropdown = document.querySelector('.nav-category-dropdown');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                // Toggle mobile menu
+                const isOpen = navDropdown.style.display === 'block';
+                navDropdown.style.display = isOpen ? 'none' : 'block';
+                navDropdown.style.position = 'fixed';
+                navDropdown.style.top = '60px';
+                navDropdown.style.left = '0';
+                navDropdown.style.right = '0';
+                navDropdown.style.width = '100%';
+                navDropdown.style.borderRadius = '0';
+            });
+        }
+
+        // Add touch feedback to product cards
+        const productCards = document.querySelectorAll('.product-card');
+        productCards.forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+            });
+            card.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Detect mobile device
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        // Load more simulation
+        const loadMore = document.querySelector('.load-more');
+        if (loadMore && isMobile()) {
+            loadMore.classList.add('show');
+
+            window.addEventListener('scroll', () => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+                    loadMore.style.display = 'block';
+                    setTimeout(() => {
+                        loadMore.style.display = 'none';
+                    }, 2000);
+                }
+            });
+        }
+
+        // Side menu functionality
+        const sideMenuToggle = document.getElementById('sideMenuToggle');
+        const sideMenuToggle2 = document.getElementById('sideMenuToggle2');
+        const sideMenuOverlay = document.getElementById('sideMenuOverlay');
+        const sideMenu = document.getElementById('sideMenu');
+        const sideMenuClose = document.getElementById('sideMenuClose');
+
+        function openSideMenu(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            console.log('Opening side menu'); // Debug log
+            console.log('sideMenu element:', sideMenu);
+            console.log('sideMenuOverlay element:', sideMenuOverlay);
+            console.log('Before - sideMenu classes:', sideMenu.className);
+            sideMenuOverlay.classList.add('show');
+            sideMenu.classList.add('show');
+            console.log('After - sideMenu classes:', sideMenu.className);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSideMenu() {
+            console.log('Closing side menu'); // Debug log
+            sideMenuOverlay.classList.remove('show');
+            sideMenu.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        if (sideMenuToggle) {
+            sideMenuToggle.addEventListener('click', openSideMenu);
+        }
+
+        if (sideMenuToggle2) {
+            sideMenuToggle2.addEventListener('click', openSideMenu);
+        }
+
+        if (sideMenuClose) {
+            sideMenuClose.addEventListener('click', closeSideMenu);
+        }
+
+        if (sideMenuOverlay) {
+            sideMenuOverlay.addEventListener('click', closeSideMenu);
+        }
+
+        // Prevent clicks inside side menu from closing it
+        if (sideMenu) {
+            sideMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
+        // Back to top functionality
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        if (backToTop) {
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    </script>
+</body>
 </html>
